@@ -12,61 +12,44 @@
     </head>
 
     <body>
-        <div>
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <a class="navbar-brand" href="#">Navbar</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon"></span>
-                </button>
-              
-                <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-                  <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                    <li class="nav-item">
-                      <a class="nav-link" href="#">Homepage <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="#">Profile</a>
-                    </li>
-                  </ul>
-                </div>
-            </nav>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+              <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('homepage')  }}"> Homepage <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('profilepage')  }}"> Profile</a>
+                </li>
+              </ul>
+            </div>
+        </nav>
+        
+        <div class="container-fluid">
 
-            <div>
+
+            <div >
                 <h2> Welcome {{user}}! </h2>
             </div>
             
             <a href="">
-                <button class="grey" style="height:20px;width:60px"> Logout </button>
+                <button> Logout </button>
             </a>
 
-            <div>
-                <h4>About Me</h4>
-            
-                <form>
-                    <label> Phone number: </label>
-                    <br>
-                    <input type="text"><br>
 
-                    <label> Additional info: </label>
-                    <br>
-                    <textarea rows="5" cols="50" name="Description"> </textarea>
-
-                    <br>
-                    <button type="submit"> Save Changes </button>
-
-                </form>
-            </div>
 
             <h3> List Item for Rent </h3>
 
-            <form method="POST" action="/handleform">
-                <label> User: </label>
-                <br>
-                <input type="text" name="username" value={{username}} readonly><br>
+            <form method="POST" action="/handleforms">
 
                 <label> Item Name: </label>
                 <br>
-                <input type="text"><br>
+                <input type="text" name="Item_Name"><br>
 
                 <label> Quantity: </label>
                 <br>
