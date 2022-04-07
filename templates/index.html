@@ -1,14 +1,38 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <link rel="stylesheet" href="/static/style.css">
-        <title>
 
-        </title>
-    </head>
+<head>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="../static/cart.js" async></script>
+    <title>
 
-    <body>
-        Hello World! 
-    </body>
+    </title>
+</head>
+
+<body onload="displayCart()">
+    Hello World!
+    <!-- display user posts -->
+    <div id="posts">
+        {% for i in range(postLen) %}
+        <div>
+            Username: <br>
+            Item: <br>
+            Description:<br>
+            <input type="button" onclick="addItem(post.product_id[i])" value="Add To Cart">
+            <input type="button" onclick="removeItem(post.product_id[i])" value="Remove From Cart">
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- this form displays cart items, and when user clicks checkout, it updates the DB -->
+    <form method="POST" action="/checkoutCart">
+        <div id="display-cart-items">
+            <h3>Cart</h3>
+            <ul id="cartItem">
+            </ul>
+        </div>
+        <input type="submit" value="Checkout">
+    </form>
+</body>
 
 </html>

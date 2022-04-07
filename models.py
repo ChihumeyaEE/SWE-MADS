@@ -7,13 +7,15 @@ db = SQLAlchemy()
 class User(db.Model):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(120), nullable=False)
+    username = db.Column(db.String(120), nullable=False, unique=True)
 
 
-# product class is used to add individual items by user, the cart should be implemented in another file on the page
-# because the the cart is always inter-changeable
-class Product(db.Model):
+# this table is for user posts of items
+class Post(db.Model):
+    __tablename__ = "post"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(90), unique=True)
-    img = db.Column(db.String(150))
-    price = db.Column(db.Float, nullable=False)
+    username = db.Column(db.String(120), db.ForeignKey("user.username"))
+    location = db.Column(db.String(120), nullable=False)
+    name = db.Column(db.String(120), nullable=False)
+    qty = db.Column(db.Integer)
+    description = db.Column(db.String(240), nullable=False)
