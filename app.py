@@ -2,7 +2,7 @@ import os
 import flask
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
-from models import db, User
+from models import db,User,Post
 from flask_login import LoginManager,logout_user, current_user,login_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -76,6 +76,28 @@ def signup():
 def logout():
     logout_user()
     return flask.redirect(flask.url_for("login"))
+
+@app.route('/homepage')
+def homepage():
+        return flask.render_template("index.html")
+
+@app.route('/profilepage')
+def profilepage():
+        return flask.render_template("profilepage.html")
+
+@app.route("/handleforms", methods=["POST", "GET"])
+def handleforms():
+    if flask.request.method == "POST":
+        data = flask.request.form
+        new_post = Post(
+            item_name=data["Item_Name"],
+            quantity=data["Quantity"],
+            description=data["Description"],
+        )
+        db.session.add(new_post)
+        db.session.commit()
+
+    return flask.redirect(flask.url_for("homepage"))
 
 app.run(
     host=os.getenv("IP", "0.0.0.0"),
