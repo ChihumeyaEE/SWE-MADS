@@ -1,38 +1,61 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 
 <head>
-    <link rel="stylesheet" href="/static/style.css">
-    <script src="../static/cart.js" async></script>
-    <title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    </title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="../static/cart.js" async></script>
+    <title></title>
 </head>
 
 <body onload="displayCart()">
-    Hello World!
-    <!-- display user posts -->
-    <div id="posts">
-        {% for i in range(postLen) %}
-        <div>
-            Username: <br>
-            Item: <br>
-            Description:<br>
-            <input type="button" onclick="addItem(post.product_id[i])" value="Add To Cart">
-            <input type="button" onclick="removeItem(post.product_id[i])" value="Remove From Cart">
-        </div>
-        {% endfor %}
-    </div>
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="{{ url_for('homepage')  }}">Navbar</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+                aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-    <!-- this form displays cart items, and when user clicks checkout, it updates the DB -->
-    <form method="POST" action="/checkoutCart">
-        <div id="display-cart-items">
-            <h3>Cart</h3>
-            <ul id="cartItem">
-            </ul>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('homepage')  }}"> Homepage <span
+                                class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('profilepage')  }}"> Profile</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <!-- display user posts -->
+        <div id="posts">
+            {% for i in range(postLen) %}
+            <div>
+                Username: <br>
+                Item: <br>
+                Description:<br>
+                <input type="button" onclick="addItem(post.product_id[i])" value="Add To Cart">
+                <input type="button" onclick="removeItem(post.product_id[i])" value="Remove From Cart">
+            </div>
+            {% endfor %}
         </div>
-        <input type="submit" value="Checkout">
-    </form>
+
+        <!-- this form displays cart items, and when user clicks checkout, it updates the DB -->
+        <form method="POST" action="/checkoutCart">
+            <div id="display-cart-items">
+                <h3>Cart</h3>
+                <ul id="cartItem">
+                </ul>
+            </div>
+            <input type="submit" value="Checkout">
+        </form>
+    </div>
 </body>
 
 </html>
