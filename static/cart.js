@@ -13,22 +13,21 @@ for (let i = 0; i < remove_btn.length; i++) {
 update_cart.addEventListener("click", () => {
     let p = document.getElementById("cartItem");
     let text = "[";
-    p.innerHTML = text + cart + "]";
-    // for (let i = 0; i < cart.length; i++) {
-    //     p.innerHTML = cart[i];
-    // }
-    // document.getElementById("cartItem").innerHTML = cart + "<br>";
+    if (cart.length > 0)
+        p.innerHTML = text + cart + "]";
+    else
+        p.innerHTML = cart;
 });
 
-function displayCart() {
-    for (let i = 0; i < cart.length; i++) {
-        let ul = document.getElementById("cartItem");
-        let li = document.createElement("li");
-        li.appendChild(document.createTextNode(cart[i]));
-        ul.appendChild(li);
-    }
+// function displayCart() {
+//     for (let i = 0; i < cart.length; i++) {
+//         let ul = document.getElementById("cartItem");
+//         let li = document.createElement("li");
+//         li.appendChild(document.createTextNode(cart[i]));
+//         ul.appendChild(li);
+//     }
 
-}
+// }
 
 function addItem(item) {
     cart.push(item);
