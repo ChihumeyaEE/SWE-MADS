@@ -8,11 +8,10 @@
     <link rel="stylesheet" href="/static/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="../static/cart.js" async></script>
     <title></title>
 </head>
 
-<body onload="displayCart()">
+<body>
     <div class="container-fluid">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <a class="navbar-brand" href="{{ url_for('homepage')  }}">Navbar</a>
@@ -37,11 +36,13 @@
         <div id="posts">
             {% for i in range(postLen) %}
             <div>
-                Username: <br>
-                Item: <br>
-                Description:<br>
-                <input type="button" onclick="addItem(post.product_id[i])" value="Add To Cart">
-                <input type="button" onclick="removeItem(post.product_id[i])" value="Remove From Cart">
+                Username: Dummy User<br>
+                <span class="item-name">Item: {{posts[i].item_name}}</span><br>
+                Description: {{posts[i].description}}<br>
+                <input class="add-btn" type="button" name="{{posts[i].item_name}}" onclick="addItem(name)"
+                    value="Add To Cart">
+                <input class="remove-btn" type="button" name="{{posts[i].item_name}}" onclick="removeItem(name)"
+                    value="Remove From Cart">
             </div>
             {% endfor %}
         </div>
@@ -50,12 +51,16 @@
         <form method="POST" action="/checkoutCart">
             <div id="display-cart-items">
                 <h3>Cart</h3>
-                <ul id="cartItem">
+                <ul>
+                    <p id="cartItem"></p>
                 </ul>
+                <input id="update-cart" type="button" value="Update Cart">
             </div>
             <input type="submit" value="Checkout">
         </form>
     </div>
+
+    <script src="../static/cart.js"></script>
 </body>
 
 </html>

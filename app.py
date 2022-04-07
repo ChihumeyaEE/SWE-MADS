@@ -50,7 +50,11 @@ def load_user(id):
 @app.route("/")
 @login_required
 def index():
-    return flask.render_template("index.html", postLen=4)
+    users_posts = Post.query.all()
+    print(users_posts[1].item_name)
+    return flask.render_template(
+        "index.html", postLen=len(users_posts), posts=users_posts
+    )
 
 
 @app.route("/login", methods=["POST", "GET"])
