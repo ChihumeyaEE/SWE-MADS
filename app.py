@@ -2,8 +2,14 @@ import os
 import flask
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
-from models import db,User,Post
-from flask_login import LoginManager,logout_user, current_user,login_user, login_required
+from models import db, User, Post
+from flask_login import (
+    LoginManager,
+    logout_user,
+    current_user,
+    login_user,
+    login_required,
+)
 from werkzeug.security import generate_password_hash, check_password_hash
 
 load_dotenv(find_dotenv())
@@ -27,14 +33,17 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
 
+
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
 
 @app.route("/")
 @login_required
 def index():
     return flask.render_template("index.html")
+
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -45,7 +54,7 @@ def login():
         user = User.query.filter_by(username=data["username"]).first()
         if user is not None and check_password_hash(user.password, password):
             login_user(user)
-            return flask.redirect(flask.url_for("main"))
+            return flask.redirect(flask.url_for("index"))
         else:
             flask.flash("Username/Password does not exist!")
 
@@ -71,19 +80,23 @@ def signup():
 
     return flask.render_template("signup.html")
 
+
 @app.route("/logout")
 @login_required
 def logout():
     logout_user()
     return flask.redirect(flask.url_for("login"))
 
-@app.route('/homepage')
-def homepage():
-        return flask.render_template("index.html")
 
-@app.route('/profilepage')
+@app.route("/homepage")
+def homepage():
+    return flask.render_template("index.html")
+
+
+@app.route("/profilepage")
 def profilepage():
-        return flask.render_template("profilepage.html")
+    return flask.render_template("profilepage.html")
+
 
 @app.route("/handleforms", methods=["POST", "GET"])
 def handleforms():
@@ -98,6 +111,7 @@ def handleforms():
         db.session.commit()
 
     return flask.redirect(flask.url_for("homepage"))
+
 
 app.run(
     host=os.getenv("IP", "0.0.0.0"),
