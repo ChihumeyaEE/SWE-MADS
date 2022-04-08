@@ -1,5 +1,5 @@
 import os
-import flask
+import flask, json
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
 from models import db, User, Post
@@ -26,8 +26,30 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
 # creates all the classes(tables) in the models.py
+# db.drop_all()
 with app.app_context():
     db.create_all()
+
+# when user clickss save, this route updates the DB and redirect to index
+@app.route("/checkoutCart", methods=["POST"])
+def checkout():
+    if flask.request.method == "POST":
+        data = flask.request.get_json()
+        for i in data["cart"]:
+            splitted = i.split("_")
+            id = splitted[1]
+            item = splitted[0]
+            # print("inside for loop: ", id, item)
+            object = Post.query.filter_by(user_id=id, item_name=item).first()
+            if object.quantity > 0:
+                print("BEFORE: ", object.quantity)
+                object.quantity -= 1
+                print("AFTER: ", object.quantity)
+                db.session.commit()
+            else:
+                print("object quantity is 0: ", object.quantity)
+        return flask.redirect("/")
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -42,7 +64,11 @@ def load_user(id):
 @app.route("/")
 @login_required
 def index():
-    return flask.render_template("index.html")
+    users_posts = Post.query.all()
+    # print(users_posts[1].item_name)
+    return flask.render_template(
+        "index.html", postLen=len(users_posts), posts=users_posts
+    )
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -90,7 +116,7 @@ def logout():
 
 @app.route("/homepage")
 def homepage():
-    return flask.render_template("index.html")
+    return flask.redirect("/")
 
 
 @app.route("/profilepage")
