@@ -103,6 +103,8 @@ def handleforms():
     if flask.request.method == "POST":
         data = flask.request.form
         new_post = Post(
+            user_id=current_user.id,
+            username=current_user.username,
             item_name=data["Item_Name"],
             quantity=data["Quantity"],
             description=data["Description"],
