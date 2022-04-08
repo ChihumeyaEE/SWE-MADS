@@ -25,11 +25,13 @@ function checkout() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                cart: cart,
+                'cart': cart,
             })
         }).then(response => response.json())
-            .then(data => console.log(data));
-        cart = [];
+            .then(data => {
+                console.log(data);
+                // cart = [];
+            });
         alert("Checkout Successful");
     } else {
         alert("cart is empty at the moment");
@@ -38,6 +40,7 @@ function checkout() {
 
 function addItem(item) {
     cart.push(item);
+    console.log(item);
 }
 
 function removeItem(item) {
