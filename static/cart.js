@@ -19,15 +19,18 @@ update_cart.addEventListener("click", () => {
         p.innerHTML = cart;
 });
 
-// function displayCart() {
-//     for (let i = 0; i < cart.length; i++) {
-//         let ul = document.getElementById("cartItem");
-//         let li = document.createElement("li");
-//         li.appendChild(document.createTextNode(cart[i]));
-//         ul.appendChild(li);
-//     }
-
-// }
+function checkout() {
+    fetch('/checkoutCart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            cart: cart,
+        })
+    }).then(response => response.json())
+        .then(data => console.log(data));
+    cart = [];
+    alert("Checkout Successful");
+}
 
 function addItem(item) {
     cart.push(item);

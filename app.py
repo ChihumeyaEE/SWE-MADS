@@ -34,7 +34,9 @@ with app.app_context():
 @app.route("/checkoutCart", methods=["GET", "POST"])
 def checkout():
     if flask.request.method == "POST":
-        pass
+        cart = flask.request.get_json()
+        print(cart)
+    return flask.redirect("/")
 
 
 login_manager = LoginManager()
@@ -51,9 +53,10 @@ def load_user(id):
 @login_required
 def index():
     users_posts = Post.query.all()
+    users = User.query.all()
     # print(users_posts[1].item_name)
     return flask.render_template(
-        "index.html", postLen=len(users_posts), posts=users_posts
+        "index.html", postLen=len(users_posts), posts=users_posts, users=users
     )
 
 
