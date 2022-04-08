@@ -1,0 +1,7 @@
+python-dotenv
+requests
+Flask
+pylint
+SQLAlchemy
+
+
