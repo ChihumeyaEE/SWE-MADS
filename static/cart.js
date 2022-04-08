@@ -20,16 +20,20 @@ update_cart.addEventListener("click", () => {
 });
 
 function checkout() {
-    fetch('/checkoutCart', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            cart: cart,
-        })
-    }).then(response => response.json())
-        .then(data => console.log(data));
-    cart = [];
-    alert("Checkout Successful");
+    if (cart.length > 0) {
+        fetch('/checkoutCart', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                cart: cart,
+            })
+        }).then(response => response.json())
+            .then(data => console.log(data));
+        cart = [];
+        alert("Checkout Successful");
+    } else {
+        alert("cart is empty at the moment");
+    }
 }
 
 function addItem(item) {
