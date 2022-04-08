@@ -3,3 +3,6 @@ requests
 Flask
 pylint
 SQLAlchemy
+flask_sqlalchemy
+flask_login
+psycopg2

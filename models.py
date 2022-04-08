@@ -15,6 +15,8 @@ class User(db.Model, UserMixin):
 class Post(db.Model):
     __tablename__ = "post"
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer)
+    username = db.Column(db.String(120))
     # location = db.Column(db.String(120), nullable=False)
     item_name = db.Column(db.String(120), nullable=False)
     quantity = db.Column(db.Integer)
