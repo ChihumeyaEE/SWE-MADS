@@ -4,4 +4,4 @@ Flask
 pylint
 SQLAlchemy
 flask_sqlalchemy
-
+flask_login
