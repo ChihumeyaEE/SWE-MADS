@@ -24,14 +24,38 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # IMPORTANT: This must be AFTER creating db variable to prevent
 # circular import issues
 
-# db.init_app(app)
+db.init_app(app)
 
 # creates all the classes(tables) in the models.py
 
-shown_location = ""
+# db.session.remove()
+# db.drop_all()
 
 with app.app_context():
     db.create_all()
+
+shown_location = ""
+
+# when user clickss save, this route updates the DB and redirect to index
+@app.route("/checkoutCart", methods=["POST"])
+def checkout():
+    if flask.request.method == "POST":
+        data = flask.request.get_json()
+        for i in data["cart"]:
+            splitted = i.split("_")
+            id = splitted[1]
+            item = splitted[0]
+            # print("inside for loop: ", id, item)
+            object = Post.query.filter_by(user_id=id, item_name=item).first()
+            if object.quantity > 0:
+                print("BEFORE: ", object.quantity)
+                object.quantity -= 1
+                print("AFTER: ", object.quantity)
+                db.session.commit()
+            else:
+                print("object quantity is 0: ", object.quantity)
+        return flask.redirect("/")
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -46,7 +70,16 @@ def load_user(id):
 @app.route("/")
 @login_required
 def index():
-    return flask.render_template("index.html")
+    global shown_location
+    current_location_data = get_location_data()
+    current_location = current_location_data["city"]
+    if shown_location == "":
+        shown_location = current_location 
+    users_posts = Post.query.all()
+    # print(users_posts[1].item_name)
+    return flask.render_template(
+        "index.html", postLen=len(users_posts), posts=users_posts, shown_location = shown_location, current_location = current_location
+    )
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -57,10 +90,6 @@ def login():
         user = User.query.filter_by(username=data["username"]).first()
         if user is not None and check_password_hash(user.password, password):
             login_user(user)
-            current_location_data = get_location_data()
-            current_location = current_location_data["city"]
-            global shown_location
-            shown_location = current_location 
             return flask.redirect(flask.url_for("index"))
         else:
             flask.flash("Username/Password does not exist!")
@@ -92,19 +121,15 @@ def signup():
 @login_required
 def logout():
     logout_user()
+    global shown_location
+    shown_location = ""
     return flask.redirect(flask.url_for("login"))
-
-
-@app.route("/homepage")
-def homepage():
-    listings = [{"name": "hammer", "quantity": 1, "location": "Atlanta", "description": "This is a hammer that is made of steel"}, {"name": "Wrench", "quantity": 3, "location": "Chicago", "description": "This is a wrench"}, {"name": "Screwdriver", "quantity": 3, "location": "Lawrenceville", "description": "This is a wrench"}]
-    return flask.render_template("homepage.html", listings = listings, shown_location = shown_location)
 
 @app.route("/search", methods = ['POST'])
 def search():
     global shown_location 
     shown_location = flask.request.form.get('location')
-    return flask.redirect(flask.url_for('homepage'))
+    return flask.redirect(flask.url_for('index'))
 
 def get_location_data():
     base_url = "http://ip-api.com/json/"
@@ -121,7 +146,11 @@ def get_location_data():
 
 @app.route("/profilepage")
 def profilepage():
-    return flask.render_template("profilepage.html")
+    current_location_data = get_location_data()
+    current_location = current_location_data["city"]
+    global shown_location
+    shown_location = ""
+    return flask.render_template("profilepage.html", current_location = current_location)
 
 
 @app.route("/handleforms", methods=["POST", "GET"])
@@ -131,6 +160,7 @@ def handleforms():
         new_post = Post(
             user_id=current_user.id,
             username=current_user.username,
+            location=data["Location"],
             item_name=data["Item_Name"],
             quantity=data["Quantity"],
             description=data["Description"],
@@ -138,7 +168,7 @@ def handleforms():
         db.session.add(new_post)
         db.session.commit()
 
-    return flask.redirect(flask.url_for("homepage"))
+    return flask.redirect(flask.url_for("index"))
 
 
 app.run(

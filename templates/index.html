@@ -1,40 +1,76 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <link rel="stylesheet" href="/static/style.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <title>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        </title>
-    </head>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title></title>
+</head>
 
-    <body>
+<body>
+    <div class="container-fluid">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="{{ url_for('homepage')  }}">Navbar</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
+            <a class="navbar-brand" href="{{ url_for('index')  }}">Navbar</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+                aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
-          
+
             <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-              <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('homepage')  }}"> Homepage <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('profilepage')  }}"> Profile</a>
-                </li>
-              </ul>
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index')  }}"> Homepage <span
+                                class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('profilepage')  }}"> Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <form action="/search" Method="POST">
+                            <input type="text" name="location" placeholder="Location...">
+                            <input type="submit" value="Search">
+                        </form>
+                    </li>
+                </ul>
             </div>
         </nav>
-        
-        <div class="container-fluid">
-
-
-            Hello World! 
+        <!-- display user posts -->
+        <div id="posts">
+            <h2>Items Available for Rent in {{shown_location}}</h2>
+            {% for i in range(postLen) %}
+            <div>
+                {% if posts[i].quantity > 0 %}
+                    {% if posts[i].location == shown_location %}
+                        Username: {{ posts[i].username }}<br>
+                        <span class="item-name">Item: {{posts[i].item_name}}</span><br> QTY: {{ posts[i].quantity }}<br>
+                        Location: {{posts[i].location}}<br>
+                        Description: {{posts[i].description}}<br>
+                        <input class="add-btn" type="button" name="{{posts[i].item_name}}_{{ posts[i].user_id }}"
+                            onclick="addItem(name)" value="Add To Cart">
+                        <input class="remove-btn" type="button" name="{{posts[i].item_name}}_{{ posts[i].user_id }}"
+                            onclick="removeItem(name)" value="Remove From Cart">
+                    {% endif %}
+                {% endif %}
+            </div>
+            {% endfor %}
         </div>
-    </body>
+
+        <!-- this form displays cart items, and when user clicks checkout, it updates the DB -->
+        <div id="display-cart-items">
+            <h3>Cart</h3>
+            <ul>
+                <p id="cartItem"></p>
+            </ul>
+            <input id="update-cart" type="button" value="Update Cart">
+        </div>
+        <input type="submit" onclick="checkout()" value="Checkout">
+    </div>
+
+    <script src="../static/cart.js"></script>
+</body>
 
 </html>

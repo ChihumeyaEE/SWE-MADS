@@ -21,7 +21,7 @@
             <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
               <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('homepage')  }}"> Homepage <span class="sr-only">(current)</span></a>
+                  <a class="nav-link" href="{{ url_for('index')  }}"> Homepage <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="{{ url_for('profilepage')  }}"> Profile</a>
@@ -50,6 +50,10 @@
                 <label> Item Name: </label>
                 <br>
                 <input type="text" name="Item_Name"><br>
+
+                <label> Location: </label>
+                <br>
+                <input type="text" name="Location" value="{{current_location}}"><br>
 
                 <label> Quantity: </label>
                 <br>
