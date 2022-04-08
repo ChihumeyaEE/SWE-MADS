@@ -1,0 +1,22 @@
+<body>
+    <h1>Signup</h1>
+    
+    <form method="POST" action="/signup">
+        <input type="text" name="username"/>
+        <input type="password" name="password"/>
+        <input type="submit"  value="Submit"/>
+</form> 
+Already siged up?
+<a href="{{url_for('login')}}">
+    Login Here!
+    </a>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class=flashes>
+    {% for message in messages %}
+    <strong>{{ message }}</strong>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+</body>
