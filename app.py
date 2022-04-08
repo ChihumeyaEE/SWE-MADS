@@ -41,7 +41,7 @@ def checkout():
             item = splitted[0]
             # print("inside for loop: ", id, item)
             object = Post.query.filter_by(user_id=id, item_name=item).first()
-            if object.quantity > 1:
+            if object.quantity > 0:
                 print("BEFORE: ", object.quantity)
                 object.quantity -= 1
                 print("AFTER: ", object.quantity)
