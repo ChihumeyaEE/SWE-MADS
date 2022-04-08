@@ -17,7 +17,7 @@ load_dotenv(find_dotenv())
 app = flask.Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 # Point SQLAlchemy to your Heroku database
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABAS_URL")
 # Gets rid of a warning
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # IMPORTANT: This must be AFTER creating db variable to prevent
