@@ -152,7 +152,10 @@ def profilepage():
     current_location = current_location_data["city"]
     global shown_location
     shown_location = ""
-    return flask.render_template("profilepage.html", current_location=current_location)
+    return flask.render_template(
+        "profilepage.html",
+        current_location=current_location,
+    )
 
 
 @app.route("/handleforms", methods=["POST", "GET"])
