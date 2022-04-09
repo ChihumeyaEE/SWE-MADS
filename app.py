@@ -140,7 +140,10 @@ def get_location_data():
     region = location_data["region"]
     city = location_data["city"]
 
-    return {"city": city, "region": region}
+    return {
+        "city": city,
+        "region": region,
+    }
 
 
 @app.route("/profilepage")
