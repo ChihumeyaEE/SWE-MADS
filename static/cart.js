@@ -28,14 +28,13 @@ function checkout() {
                 'cart': cart,
             })
         })
-        // .then(response => response.json())
-        //     .then(data => {
-        //         console.log("Here: ",response.json());
-        //         cart = [];
-        // });
+            .then(response => response.json())
+            .then(data => {
+                console.log("Here: ", response.json());
+                cart = [];
+            });
         alert("Checkout Successful");
         window.location.reload();
-        console.log("Hello")
     } else {
         alert("cart is empty at the moment");
     }
