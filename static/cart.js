@@ -30,7 +30,7 @@ function checkout() {
         }).then(response => response.json())
             .then(data => {
                 console.log(data);
-                // cart = [];
+                cart = [];
             });
         alert("Checkout Successful");
     } else {
