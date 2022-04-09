@@ -14,7 +14,7 @@
 <body>
     <div class="container-fluid">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="{{ url_for('index')  }}">Navbar</a>
+            <a class="navbar-brand" href="{{ url_for('index')  }}">Rently</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
                 aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -43,8 +43,9 @@
             <h2>Items Available for Rent in {{shown_location}}</h2>
             {% for i in range(postLen) %}
             <div>
-                {% if posts[i].quantity > 0 %}
-                    {% if posts[i].location == shown_location %}
+                {% if posts[i].location == shown_location %}
+                
+                    {% if posts[i].quantity > 0 %}
                         Username: {{ posts[i].username }}<br>
                         <span class="item-name">Item: {{posts[i].item_name}}</span><br> QTY: {{ posts[i].quantity }}<br>
                         Location: {{posts[i].location}}<br>

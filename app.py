@@ -1,6 +1,6 @@
 import os
 import requests
-import flask
+import flask,json
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
 from models import db, User, Post
@@ -37,7 +37,8 @@ with app.app_context():
 shown_location = ""
 
 # when user clickss save, this route updates the DB and redirect to index
-@app.route("/checkoutCart", methods=["POST"])
+@app.route("/checkoutCart", methods=["POST","GET"])
+@login_required
 def checkout():
     if flask.request.method == "POST":
         data = flask.request.get_json()
@@ -54,7 +55,8 @@ def checkout():
                 db.session.commit()
             else:
                 print("object quantity is 0: ", object.quantity)
-        return flask.redirect("/")
+    print("This should redirect")
+    return flask.redirect(flask.url_for("index"))
 
 
 login_manager = LoginManager()
