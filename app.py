@@ -1,3 +1,4 @@
+# pylint: disable=invalid-name,no-member,unused-import,unused-variable,missing-module-docstring,missing-function-docstring,wrong-import-order,redefined-builtin,multiple-imports,invalid-envvar-default
 import os
 import requests
 import flask, json
