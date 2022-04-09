@@ -1,3 +1,4 @@
+# pylint: disable=invalid-name,no-member,unused-import,unused-variable,missing-module-docstring,missing-function-docstring,wrong-import-order,redefined-builtin,multiple-imports,invalid-envvar-default
 from enum import unique
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
