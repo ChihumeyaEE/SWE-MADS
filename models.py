@@ -4,7 +4,6 @@ from flask_login import UserMixin
 
 db = SQLAlchemy()
 
-
 class User(db.Model, UserMixin):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
@@ -17,7 +16,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer)
     username = db.Column(db.String(120))
-    # location = db.Column(db.String(120), nullable=False)
+    location = db.Column(db.String(120), nullable=False)
     item_name = db.Column(db.String(120), nullable=False)
     quantity = db.Column(db.Integer)
     description = db.Column(db.String(240), nullable=False)
