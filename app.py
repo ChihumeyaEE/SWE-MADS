@@ -1,6 +1,6 @@
 import os
 import requests
-import flask,json
+import flask, json
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
 from models import db, User, Post
@@ -37,7 +37,7 @@ with app.app_context():
 shown_location = ""
 
 # when user clickss save, this route updates the DB and redirect to index
-@app.route("/checkoutCart", methods=["POST","GET"])
+@app.route("/checkoutCart", methods=["POST", "GET"])
 @login_required
 def checkout():
     if flask.request.method == "POST":
@@ -46,17 +46,12 @@ def checkout():
             splitted = i.split("_")
             id = splitted[1]
             item = splitted[0]
-            # print("inside for loop: ", id, item)
             object = Post.query.filter_by(user_id=id, item_name=item).first()
             if object.quantity > 0:
-                print("BEFORE: ", object.quantity)
                 object.quantity -= 1
-                print("AFTER: ", object.quantity)
                 db.session.commit()
-            else:
-                print("object quantity is 0: ", object.quantity)
-    print("This should redirect")
-    return flask.redirect(flask.url_for("index"))
+
+    return flask.jsonify("OK")
 
 
 login_manager = LoginManager()
@@ -76,16 +71,19 @@ def index():
     current_location_data = get_location_data()
     current_location = current_location_data["city"]
     if shown_location == "":
-        shown_location = current_location 
+        shown_location = current_location
     users_posts = Post.query.all()
-    # print(users_posts[1].item_name)
     return flask.render_template(
-        "index.html", postLen=len(users_posts), posts=users_posts, shown_location = shown_location, current_location = current_location
+        "index.html",
+        postLen=len(users_posts),
+        posts=users_posts,
+        shown_location=shown_location,
+        current_location=current_location,
     )
+
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
-    # form = flask.request.form
     if flask.request.method == "POST":
         data = flask.request.form
         password = data["password"]
@@ -127,11 +125,13 @@ def logout():
     shown_location = ""
     return flask.redirect(flask.url_for("login"))
 
-@app.route("/search", methods = ['POST'])
+
+@app.route("/search", methods=["POST"])
 def search():
-    global shown_location 
-    shown_location = flask.request.form.get('location')
-    return flask.redirect(flask.url_for('index'))
+    global shown_location
+    shown_location = flask.request.form.get("location")
+    return flask.redirect(flask.url_for("index"))
+
 
 def get_location_data():
     base_url = "http://ip-api.com/json/"
@@ -140,10 +140,7 @@ def get_location_data():
     region = location_data["region"]
     city = location_data["city"]
 
-    return {
-        "city": city,
-        "region": region
-    }
+    return {"city": city, "region": region}
 
 
 @app.route("/profilepage")
@@ -152,7 +149,7 @@ def profilepage():
     current_location = current_location_data["city"]
     global shown_location
     shown_location = ""
-    return flask.render_template("profilepage.html", current_location = current_location)
+    return flask.render_template("profilepage.html", current_location=current_location)
 
 
 @app.route("/handleforms", methods=["POST", "GET"])
