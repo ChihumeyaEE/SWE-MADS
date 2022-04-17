@@ -90,6 +90,8 @@ def login():
         user = User.query.filter_by(username=data["username"]).first()
         if user is not None and check_password_hash(user.password, password):
             login_user(user)
+            global shown_location
+            shown_location = ""
             return flask.redirect(flask.url_for("index"))
         else:
             flask.flash("Username/Password does not exist!")
