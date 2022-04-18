@@ -29,6 +29,12 @@ body{
     border-bottom: 1px solid #a6a6a6;
 }
 
+.center .flashes{
+    text-align: center;
+    padding-top: 10px;
+    color: rgb(252, 72, 72);
+}
+
 .center form{
     padding: 0 40px;
     box-sizing: border-box;
