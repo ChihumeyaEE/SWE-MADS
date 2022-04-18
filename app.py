@@ -49,27 +49,45 @@ def checkout():
             postid = splitted[1]
             item = splitted[0]
             object = Post.query.filter_by(id=postid, item_name=item).first()
-            
-            # if we checkout a quantity>1 of a particular item we can add to the quantity which is already there 
-            checkquantity = Transactions.query.filter_by(id=postid, item_name=item).first()
-            if checkquantity.quantity > 0:
-                checkquantity.quantity += 1
-                #updates the quantity of a particular id
-
-            else:
-                new_transaction = Transactions(
-                    user_id = current_user.id,
-                    post_id = postid,
-                    item_name = item,
-                    quantity = 1,
-                    )
-                db.session.add(new_transaction)
+            print("checkobject: " ,object)
 
             if object.quantity > 0:
                 object.quantity -= 1
                 db.session.commit()
+                savesTransactions(postid,item)
 
     return flask.jsonify("OK")
+
+def savesTransactions(postid,item):
+#have a check to where there is nothing of a particular name in the database 
+
+    # if we checkout a quantity>1 of a particular item we can add to the quantity which is already there 
+    checkquantity = Transactions.query.filter_by(post_id=postid, item_name=item).first()
+    print("checkquantity: " ,checkquantity)
+    if checkquantity is None:
+        new_transaction = Transactions(
+        user_id = current_user.id,
+        post_id = postid,
+        item_name = item,
+        quantity = 1,
+        )
+        db.session.add(new_transaction)
+        db.session.commit()
+    else:
+        if checkquantity.quantity > 0:
+            checkquantity.quantity += 1
+            db.session.commit()
+            #updates the quantity of a particular id
+        else:
+            new_transaction = Transactions(
+                user_id = current_user.id,
+                post_id = postid,
+                item_name = item,
+                quantity = 1,
+                )
+            db.session.add(new_transaction)
+            db.session.commit()
+
 
 
 login_manager = LoginManager()
