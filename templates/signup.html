@@ -1,22 +1,37 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" href="/static/authentication.css">
+    <div class="logo">
+        <img src="/static/Logo.png">
+    </div>
+</head>
+
 <body>
-    <h1>Signup</h1>
-    
-    <form method="POST" action="/signup">
-        <input type="text" name="username"/>
-        <input type="password" name="password"/>
-        <input type="submit"  value="Submit"/>
-</form> 
-Already siged up?
-<a href="{{url_for('login')}}">
-    Login Here!
-    </a>
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-<div class=flashes>
-    {% for message in messages %}
-    <strong>{{ message }}</strong>
-    {% endfor %}
-</div>
-{% endif %}
-{% endwith %}
+    <div class="center">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class=flashes>
+                    {% for message in messages %}
+                    <strong>{{ message }}</strong>
+                {% endfor %}
+            </div>
+            {% endif %}
+        {% endwith %}
+        <h1>Register</h1>
+        
+        <form method="POST" action="/signup">
+            <div class=txt_field>
+                <input type="text" name="username" placeholder="Username" required/><br>
+            </div>
+            <div class=txt_field>
+                <input type="password" name="password" placeholder="Password" required/><br>
+            </div>
+            <input type="submit"  value="Register"/><br>
+            <div class="register_link">
+                Already have an account?<br>
+                <a href="{{url_for('login')}}">Log in!</a>
+            </div>
+        </form> 
+    </div>
 </body>
