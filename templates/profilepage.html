@@ -67,8 +67,24 @@
                 <button type="submit"> Submit</button>
 
             </form>
-
-
+            
+            <br>
+            <h3>Recent Transactions</h3>
+            <div id="transactions">
+              {% for i in postersNameList %}
+              <div>
+                {% set item_1 = postersNameList[loop.index-1] %}
+                {% set item_2 = itemNameList[loop.index-1] %}
+                {% set item_3 = quantityList[loop.index-1] %}
+                  <p>
+                    Poster's Name : {{item_1}} <br>
+                    Item Name: {{item_2}}<br>
+                    Quantity: {{item_3}}<br>
+                  </p>
+                  
+              </div>
+              {% endfor %}
+          </div>
         </div>
     </body>
 

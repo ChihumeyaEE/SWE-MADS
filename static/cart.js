@@ -18,7 +18,7 @@ update_cart.addEventListener("click", () => {
     else
         p.innerHTML = cart;
 });
-
+ 
 function checkout() {
     if (cart.length > 0) {
         fetch('/checkoutCart', {
