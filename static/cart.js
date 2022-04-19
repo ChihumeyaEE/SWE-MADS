@@ -54,9 +54,9 @@ function removeItem(item, id) {
     let indexRemovedId = posts_id.indexOf(id);
     if (item === cart[indexRemoved])
         cart.splice(indexRemoved, 1);
+
     if (id === posts_id[indexRemovedId])
         posts_id.splice(indexRemovedId, 1);
     console.log(posts_id);
-
 }
 
