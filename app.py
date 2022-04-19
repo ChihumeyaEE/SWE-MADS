@@ -4,7 +4,7 @@ import requests
 import flask, json
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
-from models import db, User, Post
+from models import db, User, Post, Transactions
 from flask_login import (
     LoginManager,
     logout_user,
@@ -44,15 +44,50 @@ def checkout():
     if flask.request.method == "POST":
         data = flask.request.get_json()
         for i in data["cart"]:
+            print("Stuff in data[cart]" , data["cart"])
             splitted = i.split("_")
-            id = splitted[1]
+            postid = splitted[1]
             item = splitted[0]
-            object = Post.query.filter_by(user_id=id, item_name=item).first()
+            object = Post.query.filter_by(id=postid, item_name=item).first()
+            print("checkobject: " ,object)
+
             if object.quantity > 0:
                 object.quantity -= 1
                 db.session.commit()
+                savesTransactions(postid,item)
 
     return flask.jsonify("OK")
+
+def savesTransactions(postid,item):
+#have a check to where there is nothing of a particular name in the database 
+
+    # if we checkout a quantity>1 of a particular item we can add to the quantity which is already there 
+    checkquantity = Transactions.query.filter_by(post_id=postid, item_name=item).first()
+    print("checkquantity: " ,checkquantity)
+    if checkquantity is None:
+        new_transaction = Transactions(
+        user_id = current_user.id,
+        post_id = postid,
+        item_name = item,
+        quantity = 1,
+        )
+        db.session.add(new_transaction)
+        db.session.commit()
+    else:
+        if checkquantity.quantity > 0:
+            checkquantity.quantity += 1
+            db.session.commit()
+            #updates the quantity of a particular id
+        else:
+            new_transaction = Transactions(
+                user_id = current_user.id,
+                post_id = postid,
+                item_name = item,
+                quantity = 1,
+                )
+            db.session.add(new_transaction)
+            db.session.commit()
+
 
 
 login_manager = LoginManager()
