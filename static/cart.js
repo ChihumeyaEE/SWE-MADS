@@ -1,4 +1,4 @@
-let cart = [];
+let cart = []; let posts_id = [];
 const add_btn = document.getElementsByClassName("add-btn");
 const remove_btn = document.getElementsByClassName("remove-btn");
 const update_cart = document.getElementById("update-cart");
@@ -18,7 +18,7 @@ update_cart.addEventListener("click", () => {
     else
         p.innerHTML = cart;
 });
-
+ 
 function checkout() {
     if (cart.length > 0) {
         fetch('/checkoutCart', {
@@ -26,6 +26,7 @@ function checkout() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 'cart': cart,
+                'posts_id': posts_id,
             })
         })
             .then(response => response.json())
@@ -40,14 +41,22 @@ function checkout() {
     }
 }
 
-function addItem(item) {
-    cart.push(item);
-    console.log(item);
+function addItem(item, id) {
+    if (item !== "") {
+        cart.push(item);
+        posts_id.push(id);
+    }
+    console.log(posts_id);
 }
 
-function removeItem(item) {
+function removeItem(item, id) {
     let indexRemoved = cart.indexOf(item);
+    let indexRemovedId = posts_id.indexOf(id);
     if (item === cart[indexRemoved])
         cart.splice(indexRemoved, 1);
+
+    if (id === posts_id[indexRemovedId])
+        posts_id.splice(indexRemovedId, 1);
+    console.log(posts_id);
 }
 
