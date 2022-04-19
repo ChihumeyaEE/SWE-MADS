@@ -1,4 +1,4 @@
-# pylint: disable=invalid-name,no-member,unused-import,unused-variable,missing-module-docstring,missing-function-docstring,wrong-import-order,redefined-builtin,multiple-imports,invalid-envvar-default,global-statement
+# pylint: disable=invalid-name,no-member,unused-import,unused-variable,missing-module-docstring,missing-function-docstring,wrong-import-order,redefined-builtin,multiple-imports,invalid-envvar-default,global-statement,consider-using-enumerate
 import os
 import requests
 import flask, json
@@ -188,9 +188,26 @@ def profilepage():
     current_location = current_location_data["city"]
     global shown_location
     shown_location = ""
+
+    getUsersTransactions = Transactions.query.filter_by(user_id=current_user.id).all()
+    print("current user's transactions:" , getUsersTransactions)
+    
+    postersNameList = []
+    itemNameList = []
+    quantityList = []
+
+    for i in range(len(getUsersTransactions)):
+        postersname = Post.query.filter_by(id=getUsersTransactions[i].post_id).first()
+        postersNameList.append(postersname.username)
+        itemNameList.append(getUsersTransactions[i].item_name)
+        quantityList.append(getUsersTransactions[i].quantity)
+
     return flask.render_template(
         "profilepage.html",
         current_location=current_location,
+        postersNameList=postersNameList,
+        itemNameList=itemNameList,
+        quantityList=quantityList
     )
 
 
