@@ -43,13 +43,10 @@ shown_location = ""
 def checkout():
     if flask.request.method == "POST":
         data = flask.request.get_json()
-        for i in data["cart"]:
-            print("Stuff in data[cart]", data["cart"])
-            splitted = i.split("_")
-            postid = splitted[1]
-            item = splitted[0]
+        for i in range(len(data["posts_id"])):
+            postid = data["posts_id"][i]
+            item = data["cart"][i]
             object = Post.query.filter_by(id=postid, item_name=item).first()
-            print("checkobject: ", object)
 
             if object.quantity > 0:
                 object.quantity -= 1
@@ -63,7 +60,6 @@ def savesTransactions(postid, item):
     # have a check to where there is nothing of a particular name in the database
 
     checkquantity = Transactions.query.filter_by(post_id=postid, item_name=item).first()
-    print("checkquantity: ", checkquantity)
     if checkquantity is None:
         new_transaction = Transactions(
             user_id=current_user.id,
