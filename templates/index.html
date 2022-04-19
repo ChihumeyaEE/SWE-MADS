@@ -44,17 +44,17 @@
             {% for i in range(postLen) %}
             <div>
                 {% if posts[i].location == shown_location %}
-                
-                    {% if posts[i].quantity > 0 %}
-                        Username: {{ posts[i].username }}<br>
-                        <span class="item-name">Item: {{posts[i].item_name}}</span><br> QTY: {{ posts[i].quantity }}<br>
-                        Location: {{posts[i].location}}<br>
-                        Description: {{posts[i].description}}<br>
-                        <input class="add-btn" type="button" name="{{posts[i].item_name}}_{{ posts[i].id }}"
-                            onclick="addItem(name)" value="Add To Cart">
-                        <input class="remove-btn" type="button" name="{{posts[i].item_name}}_{{ posts[i].id }}"
-                            onclick="removeItem(name)" value="Remove From Cart">
-                    {% endif %}
+
+                {% if posts[i].quantity > 0 %}
+                Username: {{ posts[i].username }}<br>
+                <span class="item-name">Item: {{posts[i].item_name}}</span><br> QTY: {{ posts[i].quantity }}<br>
+                Location: {{posts[i].location}}<br>
+                Description: {{posts[i].description}}<br>
+                <input class="add-btn" type="button" name="{{posts[i].item_name}}"
+                    onclick="addItem(name, {{ posts[i].id }})" value="Add To Cart">
+                <input class="remove-btn" type="button" name="{{posts[i].item_name}}"
+                    onclick="removeItem(name, {{ posts[i].id }})" value="Remove From Cart">
+                {% endif %}
                 {% endif %}
             </div>
             {% endfor %}
