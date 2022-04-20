@@ -12,63 +12,59 @@
     </head>
 
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="{{ url_for('index')  }}">Rently</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-          
-            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-              <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <div class="bar">
+        <ul>
+            <li><a class="active" href="{{ url_for('index')  }}">Home</a></li>
+            <li><a href="{{ url_for('profilepage')  }}">My Profile</a></li>
+            <li><a href="/logout">Logout</a></li>
+            <div class="search-bar">
                 <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('index')  }}"> Homepage <span class="sr-only">(current)</span></a>
+                    <form action="/search" Method="POST">
+                        <input type="text" name="location" class="search-bar-text" placeholder="Please enter a location">
+                        <input type="submit" value=" ">
+                    </form>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('profilepage')  }}"> Profile</a>
-                </li>
-              </ul>
             </div>
-        </nav>
+        </ul>
+    </div>
         
-        <div class="container-fluid">
-
-
+        <div class="center">
             <div >
-                <h2> Welcome {{user}}! </h2>
+                <h2> Welcome {{current_user.username}}! </h2>
             </div>
-            
-            <a href="{{ url_for('logout')  }}">
-                <button> Logout </button>
-            </a>
 
-
-
-            <h3> List Item for Rent </h3>
+            <h3> Rent(ly) an item out today! </h3>
 
             <form method="POST" action="/handleforms">
 
                 <label> Item Name: </label>
-                <br>
-                <input type="text" name="Item_Name"><br>
+
+                <div class=txt_field>
+                  <input type="text" name="Item_Name"><br>
+                </div>
 
                 <label> Location: </label>
-                <br>
-                <input type="text" name="Location" value="{{current_location}}"><br>
 
+                <div class=txt_field>
+                  <input type="text" name="Location"><br>
+                </div>
                 <label> Quantity: </label>
-                <br>
-                <input type="number" name="Quantity" min="1" value="NONE"><br>
 
+                <div class=txt_field>
+                  <input type="number" name="Quantity" min="1" value="NONE"><br>
+                </div>
                 <label> Description: </label>
-                <br>
-                <textarea rows="5" cols="50" name="Description"> </textarea>
+                <div class=txt_field>
+                  <input type="text" name="Description">
+                </div>
 
-                <br>
-                <button type="submit"> Submit</button>
-
+                <div class="pfp-submit">
+                  <input type="submit" value="Submit">
+                </div>
             </form>
-            
-            <br>
+        </div>
+        <div class="center">
+          <br>
             <h3>Recent Transactions</h3>
             <div id="transactions">
               {% for i in postersNameList %}
@@ -77,9 +73,11 @@
                 {% set item_2 = itemNameList[loop.index-1] %}
                 {% set item_3 = quantityList[loop.index-1] %}
                   <p>
-                    Poster's Name : {{item_1}} <br>
-                    Item Name: {{item_2}}<br>
-                    Quantity: {{item_3}}<br>
+                    <div class="post">
+                      User : {{item_1}} <br>
+                      Item Name: {{item_2}}<br>
+                      Quantity: {{item_3}}<br>
+                    </div>
                   </p>
                   
               </div>

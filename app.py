@@ -35,7 +35,7 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-shown_location = ""
+shown_location = "Atlanta"
 
 # when user clickss save, this route updates the DB and redirect to index
 @app.route("/checkoutCart", methods=["POST", "GET"])
@@ -99,17 +99,16 @@ def load_user(id):
 @login_required
 def index():
     global shown_location
-    current_location_data = get_location_data()
-    current_location = current_location_data["city"]
-    if shown_location == "":
-        shown_location = current_location
+    # current_location_data = get_location_data()
+    # current_location = current_location_data["city"]
+    # if shown_location == "":
+    #     shown_location = current_location 
     users_posts = Post.query.all()
     return flask.render_template(
         "index.html",
         postLen=len(users_posts),
         posts=users_posts,
         shown_location=shown_location,
-        current_location=current_location,
     )
 
 
@@ -121,8 +120,8 @@ def login():
         user = User.query.filter_by(username=data["username"]).first()
         if user is not None and check_password_hash(user.password, password):
             login_user(user)
-            global shown_location
-            shown_location = ""
+            # global shown_location
+            # shown_location = ""
             return flask.redirect(flask.url_for("index"))
         else:
             flask.flash("Username/Password does not exist!")
@@ -154,8 +153,8 @@ def signup():
 @login_required
 def logout():
     logout_user()
-    global shown_location
-    shown_location = ""
+    # global shown_location
+    # shown_location = ""
     return flask.redirect(flask.url_for("login"))
 
 
@@ -183,8 +182,8 @@ def get_location_data():
 def profilepage():
     current_location_data = get_location_data()
     current_location = current_location_data["city"]
-    global shown_location
-    shown_location = ""
+    # global shown_location
+    # shown_location = ""
 
     getUsersTransactions = Transactions.query.filter_by(user_id=current_user.id).all()
     print("current user's transactions:" , getUsersTransactions)
