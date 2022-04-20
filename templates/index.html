@@ -43,10 +43,10 @@
                                 <div class="description">
                                     {{posts[i].description}}<br>
                                 </div>
-                                <input class="add-btn" type="button" name="{{posts[i].item_name}}_{{ posts[i].user_id }}"
-                                    onclick="addItem(name)" value="Add To Cart">
-                                <input class="remove-btn" type="button" name="{{posts[i].item_name}}_{{ posts[i].user_id }}"
-                                    onclick="removeItem(name)" value="Remove From Cart">
+                                <input class="add-btn" type="button" name="{{posts[i].item_name}}"
+                                    onclick="addItem(name, {{ posts[i].id }})" value="Add To Cart">
+                                <input class="remove-btn" type="button" name="{{posts[i].item_name}}"
+                                    onclick="removeItem(name, {{ posts[i].id }})" value="Remove From Cart">
                             </div>        
                         {% endif %}
                     {% endif %}
