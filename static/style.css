@@ -1,0 +1,175 @@
+body{
+    margin: 0;
+    padding: 0;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    background: linear-gradient(120deg, rgba(34,195,178,1), rgba(45,121,253,1));
+    min-height: 800px;
+    height: 100%;
+}
+
+.bar ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: rgb(60, 60, 60);
+}
+  
+.bar li{
+    float: left;
+}
+  
+.bar li a{
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+li a:hover{
+    background-color: #111;
+}
+
+.search-bar{
+    position: absolute;
+    width: 100%;
+    margin-left: 80%;
+    margin-top: 0.5%;
+}
+
+
+.search-bar-text{
+    width: 80%;
+    border: 3px solid rgba(34,195,178,1);
+    padding: 5px;
+    height: 40px;
+    border-radius: 5px;
+    outline: none;
+    color: #9DBFAF;
+}
+
+.search-bar input[type="submit"]{
+    background: url("https://img.icons8.com/search");
+    background-size: 93%;
+    background-color: rgba(34,195,178,1);
+    border: 1px solid rgba(34,195,178,1);
+    width: 40px;
+    height: 36px;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 20px;
+    top: -10px;
+}
+
+.search-bar input[type="submit"]:hover{
+    background-color: rgb(51, 155, 143);
+    border: 1px solid rgb(51, 155, 143);
+}
+
+.logo{
+    position: absolute;
+    top: -20%;
+    left: 33%;
+}
+
+.center{
+    background: #fff;
+    width: 80%;
+    margin: 50px auto;
+    overflow: hidden;
+    padding: 25px;
+    border-radius: 6px;
+}
+
+.post{
+    border-top: 1px solid rgba(34,195,178,1);
+    border-bottom: 1px solid rgba(34,195,178,1);
+}
+
+.location-heading{
+    text-align: center;
+}
+
+input[type="button"]{
+    font-size: 18px;
+    width: 30%;
+    margin: 5px auto;
+    opacity: 0.8;
+    height: 45px;
+    border: 2px;
+    border-radius: 30px;
+    background: #2b93e4;
+}
+
+input[type="button"]:hover{
+    opacity: 1;
+}
+
+.post .item-name{
+    font-size: 22px;
+}
+
+.post .description{
+    font-style: oblique;
+}
+
+.cart input[type="submit"]{
+    font-size: 18px;
+    width: 30%;
+    margin: 5px auto;
+    opacity: 0.8;
+    height: 45px;
+    border: 2px;
+    border-radius: 30px;
+    background: #2b93e4;
+}
+
+input[type="submit"]:hover{
+    opacity: 1;
+}
+
+.center h2{
+    text-align: center;
+}
+
+.center h3{
+    text-align: center;
+}
+
+.center form{
+    padding: 0 40px;
+    box-sizing: border-box;
+}
+
+form .txt_field{
+    position: relative;
+    border-bottom: 2px solid #a6a6a6;
+    margin: 30px 0;
+}
+
+.txt_field input{
+    width: 90%;
+    padding: 0 5px;
+    height: 20px;
+    font-size: 18px;
+    border: none;
+    background: none;
+    outline: none;
+}
+
+.pfp-submit input[type="submit"]{
+    font-size: 18px;
+    width: 30%;
+    margin: 5px auto;
+    opacity: 0.8;
+    height: 45px;
+    border: 2px;
+    border-radius: 30px;
+    background: linear-gradient(120deg, rgba(34,195,178,1), rgba(45,121,253,1));
+}
+
+.pfp-submit input[type="submit"]:hover{
+    opacity: 1.0;
+}
