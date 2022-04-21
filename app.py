@@ -59,8 +59,9 @@ def checkout():
 def savesTransactions(postid, item):
     # have a check to where there is nothing of a particular name in the database
 
-    checkquantity = Transactions.query.filter_by(post_id=postid, item_name=item).first()
+    checkquantity = Transactions.query.filter_by(user_id=current_user.id,post_id=postid, item_name=item).first()
     if checkquantity is None:
+        print("Here1")
         new_transaction = Transactions(
             user_id=current_user.id,
             post_id=postid,
@@ -72,6 +73,7 @@ def savesTransactions(postid, item):
     else:
         if checkquantity.quantity > 0:
             checkquantity.quantity += 1
+            print("Here2")
             db.session.commit()
             # updates the quantity of a particular id
         else:
@@ -81,6 +83,7 @@ def savesTransactions(postid, item):
                 item_name=item,
                 quantity=1,
             )
+            print("Here3")
             db.session.add(new_transaction)
             db.session.commit()
 
