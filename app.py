@@ -1,4 +1,5 @@
 # pylint: disable=invalid-name,no-member,unused-import,unused-variable,missing-module-docstring,missing-function-docstring,wrong-import-order,redefined-builtin,multiple-imports,invalid-envvar-default,global-statement,consider-using-enumerate
+from crypt import methods
 import os
 import requests
 import flask, json
@@ -59,7 +60,9 @@ def checkout():
 def savesTransactions(postid, item):
     # have a check to where there is nothing of a particular name in the database
 
-    checkquantity = Transactions.query.filter_by(user_id=current_user.id,post_id=postid, item_name=item).first()
+    checkquantity = Transactions.query.filter_by(
+        user_id=current_user.id, post_id=postid, item_name=item
+    ).first()
     if checkquantity is None:
         print("Here1")
         new_transaction = Transactions(
@@ -105,7 +108,7 @@ def index():
     # current_location_data = get_location_data()
     # current_location = current_location_data["city"]
     # if shown_location == "":
-    #     shown_location = current_location 
+    #     shown_location = current_location
     users_posts = Post.query.all()
     return flask.render_template(
         "index.html",
@@ -185,16 +188,14 @@ def get_location_data():
 def profilepage():
     current_location_data = get_location_data()
     current_location = current_location_data["city"]
-    # global shown_location
-    # shown_location = ""
 
     getUsersTransactions = Transactions.query.filter_by(user_id=current_user.id).all()
-    print("current user's transactions:" , getUsersTransactions)
+    print("current user's transactions:", getUsersTransactions)
 
     postersNameList = []
     itemNameList = []
     quantityList = []
-    locationList = [] 
+    locationList = []
     transactionsidList = []
     postidList = []
 
@@ -208,6 +209,10 @@ def profilepage():
         transactionsidList.append(getUsersTransactions[i].id)
         postidList.append(getPosts.id)
 
+    # User's Items
+    # query all posts for this specific user id
+    user_items = Post.query.filter_by(user_id=current_user.id).all()
+
     return flask.render_template(
         "profilepage.html",
         current_location=current_location,
@@ -215,10 +220,47 @@ def profilepage():
         itemNameList=itemNameList,
         quantityList=quantityList,
         locationList=locationList,
-
         transactionsidList=transactionsidList,
-        postidList=postidList
+        postidList=postidList,
+        user_items=user_items,
     )
+
+
+@app.route("/editQuantity", methods=["POST", "GET"])
+def editQty():
+    data = flask.request.form
+    qty = data["qty"]
+    id = data["post"]
+    post_query = Post.query.filter_by(id=id).first()
+    if Transactions.query.filter_by(post_id=id).first() is None:
+        post_query.quantity = qty
+        db.session.commit()
+    else:
+        flask.flash(
+            "Cannot edit quantity "
+            + post_query.item_name
+            + " ,because its currently being rented"
+        )
+    return flask.redirect("/profilepage")
+
+
+# Handles items getting deleted
+@app.route("/deleteItems", methods=["POST", "GET"])
+def deleteItems():
+    data = flask.request.form
+    postId = data["post"]
+    post_query = Post.query.filter_by(id=postId).first()
+
+    if Transactions.query.filter_by(post_id=postId).first() is None:
+        db.session.delete(post_query)
+        db.session.commit()
+    else:
+        flask.flash(
+            "Cannot delete "
+            + post_query.item_name
+            + " ,because its currently being rented"
+        )
+    return flask.redirect("/profilepage")
 
 
 @app.route("/handleforms", methods=["POST", "GET"])
@@ -238,27 +280,24 @@ def handleforms():
 
     return flask.redirect(flask.url_for("index"))
 
+
 @app.route("/returnitem", methods=["POST"])
 def returnitem():
     returnedquantity = int(flask.request.form.get("returnedquantity"))
-    print(type(returnedquantity))
 
     returnedtransactionid = flask.request.form.get("transactionID")
     returnedpostid = flask.request.form.get("postID")
-    print("returnedtransactionid: ", returnedtransactionid)
-    print("returnedpostid: ", returnedpostid)
 
     transactions = Transactions.query.filter_by(id=returnedtransactionid).first()
     posts = Post.query.filter_by(id=returnedpostid).first()
 
-    print("before transaction quantity: ", transactions.quantity)
     transactions.quantity = transactions.quantity - returnedquantity
-    print("after transaction quantity: ", transactions.quantity)
 
-    print("before post quantity: ", posts.quantity)
     posts.quantity = posts.quantity + returnedquantity
-    print("after post quantity: ", posts.quantity)
-    
+
+    # removes item from transactions table
+    if transactions.quantity == 0:
+        db.session.delete(transactions)
     db.session.commit()
 
     return flask.redirect(flask.url_for("profilepage"))
