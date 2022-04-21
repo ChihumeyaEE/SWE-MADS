@@ -1,0 +1,78 @@
+body{
+    margin: 0;
+    padding: 0;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    background: linear-gradient(120deg, rgba(34,195,178,1), rgba(45,121,253,1));
+    height: 100vh;
+    overflow: hidden;
+}
+
+.logo{
+    position: absolute;
+    top: -20%;
+    left: 33%;
+}
+
+.center{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    background: white;
+    border-radius: 15px;
+}
+
+.center h1{
+    text-align: center;
+    padding: 0 0 20px 0;
+    border-bottom: 1px solid #a6a6a6;
+}
+
+.center .flashes{
+    text-align: center;
+    padding-top: 10px;
+    color: rgb(252, 72, 72);
+}
+
+.center form{
+    padding: 0 40px;
+    box-sizing: border-box;
+}
+
+form .txt_field{
+    position: relative;
+    border-bottom: 2px solid #a6a6a6;
+    margin: 30px 0;
+}
+
+.txt_field input{
+    width: 100%;
+    padding: 0 5px;
+    height: 40px;
+    font-size: 18px;
+    border: none;
+    background: none;
+    outline: none;
+}
+
+input[type="submit"]{
+    font-size: 18px;
+    opacity: 0.8;
+    width: 100%;
+    height: 45px;
+    border: 2px;
+    border-radius: 30px;
+    background: linear-gradient(120deg, rgba(34,195,178,1), rgba(45,121,253,1));
+}
+
+input[type="submit"]:hover{
+    opacity: 1.0;
+}
+
+
+.register_link{
+    text-align: center;
+    padding: 20px 0;
+    color: #494949;
+}

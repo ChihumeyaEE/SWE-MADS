@@ -1,10 +1,10 @@
-# pylint: disable=invalid-name,no-member,unused-import,unused-variable,missing-module-docstring,missing-function-docstring,wrong-import-order,redefined-builtin,multiple-imports,invalid-envvar-default,global-statement
+# pylint: disable=invalid-name,no-member,unused-import,unused-variable,missing-module-docstring,missing-function-docstring,wrong-import-order,redefined-builtin,multiple-imports,invalid-envvar-default,global-statement,consider-using-enumerate
 import os
 import requests
 import flask, json
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
-from models import db, User, Post
+from models import db, User, Post, Transactions
 from flask_login import (
     LoginManager,
     logout_user,
@@ -35,7 +35,7 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-shown_location = ""
+shown_location = "Atlanta"
 
 # when user clickss save, this route updates the DB and redirect to index
 @app.route("/checkoutCart", methods=["POST", "GET"])
@@ -43,16 +43,49 @@ shown_location = ""
 def checkout():
     if flask.request.method == "POST":
         data = flask.request.get_json()
-        for i in data["cart"]:
-            splitted = i.split("_")
-            id = splitted[1]
-            item = splitted[0]
-            object = Post.query.filter_by(user_id=id, item_name=item).first()
+        for i in range(len(data["posts_id"])):
+            postid = data["posts_id"][i]
+            item = data["cart"][i]
+            object = Post.query.filter_by(id=postid, item_name=item).first()
+
             if object.quantity > 0:
                 object.quantity -= 1
                 db.session.commit()
+                savesTransactions(postid, item)
 
     return flask.jsonify("OK")
+
+
+def savesTransactions(postid, item):
+    # have a check to where there is nothing of a particular name in the database
+
+    checkquantity = Transactions.query.filter_by(user_id=current_user.id,post_id=postid, item_name=item).first()
+    if checkquantity is None:
+        print("Here1")
+        new_transaction = Transactions(
+            user_id=current_user.id,
+            post_id=postid,
+            item_name=item,
+            quantity=1,
+        )
+        db.session.add(new_transaction)
+        db.session.commit()
+    else:
+        if checkquantity.quantity > 0:
+            checkquantity.quantity += 1
+            print("Here2")
+            db.session.commit()
+            # updates the quantity of a particular id
+        else:
+            new_transaction = Transactions(
+                user_id=current_user.id,
+                post_id=postid,
+                item_name=item,
+                quantity=1,
+            )
+            print("Here3")
+            db.session.add(new_transaction)
+            db.session.commit()
 
 
 login_manager = LoginManager()
@@ -69,17 +102,16 @@ def load_user(id):
 @login_required
 def index():
     global shown_location
-    current_location_data = get_location_data()
-    current_location = current_location_data["city"]
-    if shown_location == "":
-        shown_location = current_location
+    # current_location_data = get_location_data()
+    # current_location = current_location_data["city"]
+    # if shown_location == "":
+    #     shown_location = current_location 
     users_posts = Post.query.all()
     return flask.render_template(
         "index.html",
         postLen=len(users_posts),
         posts=users_posts,
         shown_location=shown_location,
-        current_location=current_location,
     )
 
 
@@ -91,6 +123,8 @@ def login():
         user = User.query.filter_by(username=data["username"]).first()
         if user is not None and check_password_hash(user.password, password):
             login_user(user)
+            # global shown_location
+            # shown_location = ""
             return flask.redirect(flask.url_for("index"))
         else:
             flask.flash("Username/Password does not exist!")
@@ -122,15 +156,15 @@ def signup():
 @login_required
 def logout():
     logout_user()
-    global shown_location
-    shown_location = ""
+    # global shown_location
+    # shown_location = ""
     return flask.redirect(flask.url_for("login"))
 
 
 @app.route("/search", methods=["POST"])
 def search():
     global shown_location
-    shown_location = flask.request.form.get("location")
+    shown_location = flask.request.form.get("location").capitalize()
     return flask.redirect(flask.url_for("index"))
 
 
@@ -151,11 +185,39 @@ def get_location_data():
 def profilepage():
     current_location_data = get_location_data()
     current_location = current_location_data["city"]
-    global shown_location
-    shown_location = ""
+    # global shown_location
+    # shown_location = ""
+
+    getUsersTransactions = Transactions.query.filter_by(user_id=current_user.id).all()
+    print("current user's transactions:" , getUsersTransactions)
+
+    postersNameList = []
+    itemNameList = []
+    quantityList = []
+    locationList = [] 
+    transactionsidList = []
+    postidList = []
+
+    for i in range(len(getUsersTransactions)):
+        getPosts = Post.query.filter_by(id=getUsersTransactions[i].post_id).first()
+        postersNameList.append(getPosts.username)
+        itemNameList.append(getUsersTransactions[i].item_name)
+        quantityList.append(getUsersTransactions[i].quantity)
+        locationList.append(getPosts.location)
+
+        transactionsidList.append(getUsersTransactions[i].id)
+        postidList.append(getPosts.id)
+
     return flask.render_template(
         "profilepage.html",
         current_location=current_location,
+        postersNameList=postersNameList,
+        itemNameList=itemNameList,
+        quantityList=quantityList,
+        locationList=locationList,
+
+        transactionsidList=transactionsidList,
+        postidList=postidList
     )
 
 
@@ -175,6 +237,31 @@ def handleforms():
         db.session.commit()
 
     return flask.redirect(flask.url_for("index"))
+
+@app.route("/returnitem", methods=["POST"])
+def returnitem():
+    returnedquantity = int(flask.request.form.get("returnedquantity"))
+    print(type(returnedquantity))
+
+    returnedtransactionid = flask.request.form.get("transactionID")
+    returnedpostid = flask.request.form.get("postID")
+    print("returnedtransactionid: ", returnedtransactionid)
+    print("returnedpostid: ", returnedpostid)
+
+    transactions = Transactions.query.filter_by(id=returnedtransactionid).first()
+    posts = Post.query.filter_by(id=returnedpostid).first()
+
+    print("before transaction quantity: ", transactions.quantity)
+    transactions.quantity = transactions.quantity - returnedquantity
+    print("after transaction quantity: ", transactions.quantity)
+
+    print("before post quantity: ", posts.quantity)
+    posts.quantity = posts.quantity + returnedquantity
+    print("after post quantity: ", posts.quantity)
+    
+    db.session.commit()
+
+    return flask.redirect(flask.url_for("profilepage"))
 
 
 app.run(

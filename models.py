@@ -22,3 +22,11 @@ class Post(db.Model):
     item_name = db.Column(db.String(120), nullable=False)
     quantity = db.Column(db.Integer)
     description = db.Column(db.String(240), nullable=False)
+
+class Transactions(db.Model):
+    __tablename__ = "transactions"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer)   #current user
+    post_id = db.Column(db.Integer)
+    item_name = db.Column(db.String(120), nullable=False)
+    quantity = db.Column(db.Integer)
