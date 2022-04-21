@@ -190,23 +190,34 @@ def profilepage():
 
     getUsersTransactions = Transactions.query.filter_by(user_id=current_user.id).all()
     print("current user's transactions:" , getUsersTransactions)
-    
+
     postersNameList = []
     itemNameList = []
     quantityList = []
+    locationList = [] 
+    transactionsidList = []
+    postidList = []
 
     for i in range(len(getUsersTransactions)):
-        postersname = Post.query.filter_by(id=getUsersTransactions[i].post_id).first()
-        postersNameList.append(postersname.username)
+        getPosts = Post.query.filter_by(id=getUsersTransactions[i].post_id).first()
+        postersNameList.append(getPosts.username)
         itemNameList.append(getUsersTransactions[i].item_name)
         quantityList.append(getUsersTransactions[i].quantity)
+        locationList.append(getPosts.location)
+
+        transactionsidList.append(getUsersTransactions[i].id)
+        postidList.append(getPosts.id)
 
     return flask.render_template(
         "profilepage.html",
         current_location=current_location,
         postersNameList=postersNameList,
         itemNameList=itemNameList,
-        quantityList=quantityList
+        quantityList=quantityList,
+        locationList=locationList,
+
+        transactionsidList=transactionsidList,
+        postidList=postidList
     )
 
 
@@ -226,6 +237,31 @@ def handleforms():
         db.session.commit()
 
     return flask.redirect(flask.url_for("index"))
+
+@app.route("/returnitem", methods=["POST"])
+def returnitem():
+    returnedquantity = int(flask.request.form.get("returnedquantity"))
+    print(type(returnedquantity))
+
+    returnedtransactionid = flask.request.form.get("transactionID")
+    returnedpostid = flask.request.form.get("postID")
+    print("returnedtransactionid: ", returnedtransactionid)
+    print("returnedpostid: ", returnedpostid)
+
+    transactions = Transactions.query.filter_by(id=returnedtransactionid).first()
+    posts = Post.query.filter_by(id=returnedpostid).first()
+
+    print("before transaction quantity: ", transactions.quantity)
+    transactions.quantity = transactions.quantity - returnedquantity
+    print("after transaction quantity: ", transactions.quantity)
+
+    print("before post quantity: ", posts.quantity)
+    posts.quantity = posts.quantity + returnedquantity
+    print("after post quantity: ", posts.quantity)
+    
+    db.session.commit()
+
+    return flask.redirect(flask.url_for("profilepage"))
 
 
 app.run(

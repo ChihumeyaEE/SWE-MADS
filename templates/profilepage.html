@@ -72,15 +72,32 @@
                 {% set item_1 = postersNameList[loop.index-1] %}
                 {% set item_2 = itemNameList[loop.index-1] %}
                 {% set item_3 = quantityList[loop.index-1] %}
-                  <p>
-                    <div class="post">
-                      User : {{item_1}} <br>
-                      Item Name: {{item_2}}<br>
-                      Quantity: {{item_3}}<br>
-                    </div>
-                  </p>
-                  
+                {% set item_3 = quantityList[loop.index-1] %}
+                {% set item_4 = locationList[loop.index-1] %}
+                
+                {% set item_5 = transactionsidList[loop.index-1] %}
+                {% set item_6 = postidList[loop.index-1] %}
+
+                  {% if item_3 > 0 %}
+                    <p>
+                      <div class="post">
+                        User : {{item_1}} <br>
+                        Item Name: {{item_2}}<br>
+                        Location: {{item_4}}<br>
+                        <form action="/returnitem" method="POST">
+                          Quantity: <input name="returnedquantity" type="number" value="{{item_3}}" readonly><br>
+                          
+                          <input type="hidden" name="transactionID" value="{{item_5}}">
+                          <input type="hidden" name="postID" value="{{item_6}}">
+                          <div class="pfp-submit">
+                            <input type="submit" value="Return">
+                          </div>
+                        </form>
+                      </div>
+                    </p>
+                  {% endif %}
               </div>
+      
               {% endfor %}
           </div>
         </div>
