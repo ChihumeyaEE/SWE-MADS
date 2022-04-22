@@ -59,7 +59,7 @@ def checkout():
 
 
 def savesTransactions(postid, item):
-    # have a check to where there is nothing of a particular name in the database
+    # have a check to where there is nothing of a particular name in the db
 
     checkquantity = Transactions.query.filter_by(
         user_id=current_user.id, post_id=postid, item_name=item
