@@ -21,40 +21,65 @@
             <div class="search-bar">
                 <li class="nav-item">
                     <form action="/search" Method="POST">
-                        <input type="text" name="location" class="search-bar-text" placeholder="Please enter a location">
+                        <input type="text" name="location" class="search-bar-text"
+                            placeholder="Please enter a location">
                         <input type="submit" value=" ">
                     </form>
                 </li>
             </div>
         </ul>
     </div>
+    <div>
+        <h3>Check Weather</h3>
+        {% if city != ""%}
+        City : {{ city }},
+        Temperature : {{ temp }}<span>&#176;</span>,
+        Humidity : {{ humidity }}<span>&#37;,
+            Condition : {{ cond }}
+            <img src="http://openweathermap.org/img/w/{{ icon }}.png" alt="Image">
+            {% endif %}
+            <form name="weather" method="POST" action="/" onsubmit="return validate()">
+                Zip Code : <input type="text" placeholder="Enter Your Zipcode" name="zip">
+                <input type="submit">
+            </form>
+            <script>
+                function validate() {
+                    let val = document.forms["weather"]["zip"].value;
+                    if (val === "") {
+                        alert("Cannot submit empty value!");
+                        return false;
+                    }
+                    return true;
+                }
+            </script>
+    </div>
     <div class="center">
-            <!-- display user posts -->
-            <div id="posts">
-                <div class="location-heading">
-                    <h2>Items Available for Rent in {{shown_location}}</h2>
-                </div>
-                {% for i in range(postLen) %}
-                    {% if posts[i].quantity > 0 %}
-                        {% if posts[i].location == shown_location %}
-                            <div class="post">
-                                <span class="item-name">{{posts[i].item_name}}</span><br>
-                                Posted by user: {{ posts[i].username }}<br>
-                                Quantity: {{ posts[i].quantity }}<br>
-                                <div class="description">
-                                    {{posts[i].description}}<br>
-                                </div>
-                                <input class="add-btn" type="button" name="{{posts[i].item_name}}"
-                                    onclick="addItem(name, {{ posts[i].id }})" value="Add To Cart">
-                                <input class="remove-btn" type="button" name="{{posts[i].item_name}}"
-                                    onclick="removeItem(name, {{ posts[i].id }})" value="Remove From Cart">
-                            </div>        
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
+        <!-- display user posts -->
+        <div id="posts">
+            <div class="location-heading">
+                <h2>Items Available for Rent in {{shown_location}}</h2>
             </div>
+            {% for i in range(postLen) %}
+            {% if posts[i].quantity > 0 %}
+            {% if posts[i].location == shown_location %}
+            <div class="post">
+                <span class="item-name">{{posts[i].item_name}}</span><br>
+                Posted by user: {{ posts[i].username }}<br>
+                Quantity: {{ posts[i].quantity }}<br>
+                <div class="description">
+                    {{posts[i].description}}<br>
+                </div>
+                <input class="add-btn" type="button" name="{{posts[i].item_name}}"
+                    onclick="addItem(name, {{ posts[i].id }})" value="Add To Cart">
+                <input class="remove-btn" type="button" name="{{posts[i].item_name}}"
+                    onclick="removeItem(name, {{ posts[i].id }})" value="Remove From Cart">
+            </div>
+            {% endif %}
+            {% endif %}
+            {% endfor %}
+        </div>
 
-            <!-- this form displays cart items, and when user clicks checkout, it updates the DB -->
+        <!-- this form displays cart items, and when user clicks checkout, it updates the DB -->
 
     </div>
     <div class="center">

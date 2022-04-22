@@ -19,6 +19,7 @@ load_dotenv(find_dotenv())
 
 app = flask.Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
+api_key = os.getenv("api_key")
 # Point SQLAlchemy to your Heroku database
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABAS_URL")
 # Gets rid of a warning
@@ -101,20 +102,45 @@ def load_user(id):
     return User.query.get(int(id))
 
 
-@app.route("/")
+@app.route("/", methods=["POST", "GET"])
 @login_required
 def index():
     global shown_location
-    # current_location_data = get_location_data()
-    # current_location = current_location_data["city"]
-    # if shown_location == "":
-    #     shown_location = current_location
+
+    humid, condition, cityname, icon, temperaturefahrenheit = 0.0, "", "", "", 0.0
+
+    if flask.request.method == "POST":
+        zipcode = flask.request.form["zip"]
+        url = requests.get(
+            "http://api.openweathermap.org/data/2.5/weather?zip="
+            + zipcode
+            + ",us&appid="
+            + api_key
+        )
+        if url.ok:
+            weather = url.json()
+
+            # Down below is temperature in kelin.
+            temperatureKelvin = float(weather["main"]["temp"])
+            humid = float(weather["main"]["humidity"])
+            condition = str(weather["weather"][0]["description"])
+            icon = str(weather["weather"][0]["icon"])
+            cityname = str(weather["name"])
+
+            # Formula to change temeprature from kelvin to fahrenheit
+            temperaturefahrenheit = round(temperatureKelvin - 273.15) * 1.8 + 32
+
     users_posts = Post.query.all()
     return flask.render_template(
         "index.html",
         postLen=len(users_posts),
         posts=users_posts,
         shown_location=shown_location,
+        humidity=humid,
+        cond=condition,
+        city=cityname,
+        icon=icon,
+        temp=temperaturefahrenheit,
     )
 
 
@@ -302,12 +328,14 @@ def returnitem():
 
     return flask.redirect(flask.url_for("profilepage"))
 
+
 @app.route("/aboutus")
 def aboutus():
 
     return flask.render_template(
         "aboutus.html",
     )
+
 
 app.run(
     host=os.getenv("IP", "0.0.0.0"),
