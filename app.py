@@ -302,6 +302,12 @@ def returnitem():
 
     return flask.redirect(flask.url_for("profilepage"))
 
+@app.route("/aboutus")
+def aboutus():
+
+    return flask.render_template(
+        "aboutus.html",
+    )
 
 app.run(
     host=os.getenv("IP", "0.0.0.0"),
