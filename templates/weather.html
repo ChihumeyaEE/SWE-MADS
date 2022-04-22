@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<div class="background">
+<body>    
+
+<div class="city" >
+    <h1>
+        Check Weather   
+    </h1>
+    City : {{ city }} <br>
+    Temperature : {{ temp }}<span>&#176;</span><br>
+    Humidity :  {{ humidity }}<span>&#37; <br>
+    Condition : {{ cond }} <br>
+     
+    <img src="http://openweathermap.org/img/w/{{ icon }}.png" alt="Image">
+
+ 
+    
+     
+     
+<form method="POST" action="/weather" >
+    Zip Code : <input type="text" placeholder="Enter Your Zipcode" name="zip">
+    <input type="submit" >
+</form>
+
+</div>
+</body>
+</div>
+</html>
